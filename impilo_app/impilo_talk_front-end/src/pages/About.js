@@ -6,6 +6,9 @@ import axios from "axios";
 
 const AboutContainer = styled.div`
   padding: 80px 20px;
+  background-color: crimson;
+  min-height: 100vh; /* Ensures the background covers the full height */
+  color: black; /* Sets text color to white for better contrast */
 `;
 
 const AboutContent = styled.div`
@@ -18,6 +21,7 @@ const DoctorCard = styled.div`
   padding: 16px;
   margin-bottom: 16px;
   background-color: #f9f9f9;
+  color: black; /* Ensures text inside cards is readable */
 `;
 
 const DoctorName = styled.h2`
@@ -52,14 +56,18 @@ const About = () => {
         <p>This is the About Us page.</p>
         <AboutContent>
           <h2>Our Doctors</h2>
-          {doctors.map((doctor) => (
-            <DoctorCard key={doctor._id}>
-              <DoctorName>{doctor.name}</DoctorName>
-              <DoctorDetails>Phone: {doctor.phone}</DoctorDetails>
-              <DoctorDetails>Specialty: {doctor.specialty}</DoctorDetails>
-              <DoctorDetails>Location: {doctor.location}</DoctorDetails>
-            </DoctorCard>
-          ))}
+          {doctors.slice(0, 3).map(
+            (
+              doctor // Limits the display to 3 doctors
+            ) => (
+              <DoctorCard key={doctor._id}>
+                <DoctorName>{doctor.name}</DoctorName>
+                <DoctorDetails>Phone: {doctor.phone}</DoctorDetails>
+                <DoctorDetails>Specialty: {doctor.specialty}</DoctorDetails>
+                <DoctorDetails>Location: {doctor.location}</DoctorDetails>
+              </DoctorCard>
+            )
+          )}
         </AboutContent>
       </AboutContainer>
     </>

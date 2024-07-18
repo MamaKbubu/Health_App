@@ -29,6 +29,13 @@ const doctorSchema = new mongoose.Schema({
   specialty: String,
   location: String,
 });
+// Define Counsellor Schema and Model
+const counsellorSchema = new mongoose.Schema({
+  name: String,
+  phone: String,
+  specialty: String,
+  location: String,
+});
 
 const Nurse = mongoose.model("Nurse", nurseSchema);
 const Doctor = mongoose.model("Doctor", doctorSchema);
