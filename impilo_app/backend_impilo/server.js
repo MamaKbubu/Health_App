@@ -43,10 +43,17 @@ app.get("/Doctors", async (req, res) => {
   const doctors = await Doctor.find();
   res.json(doctors);
 });
+// Sample route to get nurses data
 app.get("/Nurses", async (req, res) => {
   const nurses = await Nurse.find();
   res.json(nurses);
 });
+// Sample route to get counsellors data
+app.get("/Counsellors", async (req, res) => {
+  const counsellors = await Counsellor.find();
+  res.json(counsellors);
+});
+//this below here is adding a route to the home page i guess
 app.get("/", (req, res) => {
   res.send("Welcome to Impilo TALK");
 });
@@ -57,12 +64,21 @@ app.post("/adddoctor", async (req, res) => {
   await doctor.save();
   res.json(doctor);
 });
+//this is where nurses will be added into the database
 app.post("/addnurse", async (req, res) => {
   const { name, phone, specialty, location } = req.body;
   const nurse = new Nurse({ name, phone, specialty, location });
   await nurse.save();
   res.json(nurse);
 });
+//this is where counsellors will be added into the database
+app.post("/addcounsellor", async (req, res) => {
+  const { name, phone, specialty, location } = req.body;
+  const counsellor = new Counsellor({ name, phone, specialty, location });
+  await counsellor.save();
+  res.json(counsellor);
+});
+
 // Start the server
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
