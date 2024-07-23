@@ -2,42 +2,12 @@
 import React, { useEffect, useState } from "react";
 import Navbar from "../components/Navbar";
 import styled from "styled-components";
-// import styled from "styled-components";
 import axios from "axios";
-import AddDoctor from "../utilities/addDoctor";
-import fetchDoctors from "../utilities/api_routes";
-//eslint-disable-next-line
 
-// const AboutContainer = styled.div`
-//   padding: 80px 20px;
-// background-color: red;
-//   min-height: 100vh; /* Ensures the background covers the full height */
-//   color: white; /* Sets text color to white for better contrast */
-// `;
-
-// const AboutContent = styled.div`
-//   margin-top: 40px;
-// `;
-
-// const DoctorCard = styled.div`
-//   border: 1px solid #ddd;
-//   border-radius: 8px;
-//   padding: 16px;
-//   margin-bottom: 16px;
-//   background-color: #f9f9f9;
-//   color: black; /* Ensures text inside cards is readable */
-// `;
-
-// const DoctorName = styled.h2`
-//   margin-bottom: 8px;
-// `;
-
-// const DoctorDetails = styled.p`
-//   margin: 4px 0;
-// `;
+// Styled Components
 const AboutContainer = styled.div`
   padding: 80px 20px;
-  background-color: red;
+  background-color: #f5f5f5;
 `;
 
 const AboutContent = styled.div`
@@ -60,7 +30,6 @@ const DoctorDetails = styled.p`
   margin: 4px 0;
 `;
 
-// Add these styled components
 const FormContainer = styled.div`
   margin-top: 40px;
   padding: 20px;
@@ -101,6 +70,7 @@ const FormButton = styled.button`
     background-color: #0056b3;
   }
 `;
+
 const About = () => {
   const [doctors, setDoctors] = useState([]);
   const [name, setName] = useState("");
@@ -111,24 +81,19 @@ const About = () => {
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
-      AddDoctor("POST", {
-        FormData,
-      });
-      //   await axios.post("http://localhost:5000/doctors", {
-      //     name,
-      //     phone,
-      //     specialty,
-      //     location,
-      //   });
+      const newDoctor = { name, phone, specialty, location };
+      await axios.post("http://localhost:5000/doctors", newDoctor);
       alert("Doctor added successfully");
       setName("");
       setPhone("");
       setSpecialty("");
       setLocation("");
+      setDoctors([...doctors, newDoctor]);
     } catch (error) {
       console.error("There was an error adding the doctor!", error);
     }
   };
+
   useEffect(() => {
     const fetchDoctors = async () => {
       try {
@@ -145,9 +110,24 @@ const About = () => {
   return (
     <>
       <Navbar />
+      <AboutContainer>
+        <h1>About Us</h1>
+        <p>This is the About Us page.</p>
+        <AboutContent>
+          <h2>Our Doctors</h2>
+          {doctors.slice(0, 3).map((doctor) => (
+            <DoctorCard key={doctor._id}>
+              <DoctorName>{doctor.name}</DoctorName>
+              <DoctorDetails>Phone: {doctor.phone}</DoctorDetails>
+              <DoctorDetails>Specialty: {doctor.specialty}</DoctorDetails>
+              <DoctorDetails>Location: {doctor.location}</DoctorDetails>
+            </DoctorCard>
+          ))}
+        </AboutContent>
+      </AboutContainer>
       <FormContainer>
         <FormTitle>Add a Doctor</FormTitle>
-        <Form onSubmit={handleSubmit(FormData)}>
+        <Form onSubmit={handleSubmit}>
           <FormLabel>Name:</FormLabel>
           <FormInput
             type="text"
@@ -184,28 +164,6 @@ const About = () => {
         </Form>
       </FormContainer>
     </>
-    // <>
-    //   <Navbar />
-    //   <AboutContainer>
-    //     <h1>About Us</h1>
-    //     <p>This is the About Us page.</p>
-    //     <AboutContent>
-    //       <h2>Our Doctors</h2>
-    //       {doctors.slice(0, 3).map(
-    //         (
-    //           doctor // Limits the display to 3 doctors
-    //         ) => (
-    //           <DoctorCard key={doctor._id}>
-    //             <DoctorName>{doctor.name}</DoctorName>
-    //             <DoctorDetails>Phone: {doctor.phone}</DoctorDetails>
-    //             <DoctorDetails>Specialty: {doctor.specialty}</DoctorDetails>
-    //             <DoctorDetails>Location: {doctor.location}</DoctorDetails>
-    //           </DoctorCard>
-    //         )
-    //       )}
-    //     </AboutContent>
-    //   </AboutContainer>
-    // </>
   );
 };
 
