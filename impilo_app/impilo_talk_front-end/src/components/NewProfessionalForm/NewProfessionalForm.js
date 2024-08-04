@@ -11,6 +11,8 @@ const NewProfessionalForm = ({ fetchProfessionals }) => {
     type: "doctor", // default value
   });
 
+  const [confirmationMessage, setConfirmationMessage] = useState("");
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({
@@ -31,13 +33,18 @@ const NewProfessionalForm = ({ fetchProfessionals }) => {
         location: "",
         type: "doctor",
       });
+      setConfirmationMessage("You have successfully joined our network!");
     } catch (error) {
       console.error("Error adding professional:", error);
+      setConfirmationMessage(
+        "There was an error joining the network. Please try again."
+      );
     }
   };
 
   return (
     <FormContainer>
+      <h2>Join Our Team</h2>
       <Form onSubmit={handleSubmit}>
         <Input
           type="text"
@@ -83,6 +90,7 @@ const NewProfessionalForm = ({ fetchProfessionals }) => {
         </Select>
         <Button type="submit">Add Professional</Button>
       </Form>
+      {confirmationMessage && <p>{confirmationMessage}</p>}
     </FormContainer>
   );
 };

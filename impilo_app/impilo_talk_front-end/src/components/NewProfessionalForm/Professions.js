@@ -8,7 +8,14 @@ export const FormContainer = styled.div`
   border: 1px solid #ccc;
   border-radius: 10px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  background-color: black;
+  background-color: #f9f9f9;
+`;
+
+export const Heading = styled.h2`
+  margin-bottom: 20px;
+  font-size: 24px;
+  color: #333;
+  text-align: center;
 `;
 
 export const Form = styled.form`
