@@ -1,9 +1,31 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import Navbar from "../components/Navbar";
+import Footer from "../components/Footer";
+import {
+  Container,
+  Form,
+  Label,
+  Input,
+  Textarea,
+  Button,
+  Testimonial,
+  TestimonialName,
+  TestimonialMessage,
+  TestimonialImage,
+  TestimonialWrapper,
+} from "./TestimonialsElements";
+import testimonialsData from "./testimonials.json"; // Import the JSON file
+import image from "../images/Quote.jpg";
 
 const Testimonials = () => {
   const [testimonials, setTestimonials] = useState([]);
   const [name, setName] = useState("");
   const [message, setMessage] = useState("");
+
+  useEffect(() => {
+    // Load testimonials from the JSON file
+    setTestimonials(testimonialsData);
+  }, []);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -14,40 +36,47 @@ const Testimonials = () => {
   };
 
   return (
-    <div>
-      <h1>Testimonials</h1>
-      <form onSubmit={handleSubmit}>
-        <div>
-          <label htmlFor="name">Name:</label>
-          <input
-            type="text"
-            id="name"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            required
-          />
-        </div>
-        <div>
-          <label htmlFor="message">Message:</label>
-          <textarea
-            id="message"
-            value={message}
-            onChange={(e) => setMessage(e.target.value)}
-            required
-          />
-        </div>
-        <button type="submit">Submit</button>
-      </form>
-      <div>
-        <h2>Submitted Testimonials</h2>
-        {testimonials.map((testimonial, index) => (
-          <div key={index}>
-            <h3>{testimonial.name}</h3>
-            <p>{testimonial.message}</p>
+    <>
+      <Navbar />
+      <Container>
+        <h1>Testimonials</h1>
+        <Form onSubmit={handleSubmit}>
+          <div>
+            <Label htmlFor="name">Name:</Label>
+            <Input
+              type="text"
+              id="name"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              required
+            />
           </div>
-        ))}
-      </div>
-    </div>
+          <div>
+            <Label htmlFor="message">Message:</Label>
+            <Textarea
+              id="message"
+              value={message}
+              onChange={(e) => setMessage(e.target.value)}
+              required
+            />
+          </div>
+          <Button type="submit">Submit</Button>
+        </Form>
+        <div>
+          <h2>Submitted Testimonials</h2>
+          {testimonials.slice(0, 3).map((testimonial, index) => (
+            <TestimonialWrapper key={index}>
+              <TestimonialImage src={image} />
+              <Testimonial>
+                <TestimonialName>{testimonial.name}</TestimonialName>
+                <TestimonialMessage>{testimonial.message}</TestimonialMessage>
+              </Testimonial>
+            </TestimonialWrapper>
+          ))}
+        </div>
+        <Footer />
+      </Container>
+    </>
   );
 };
 

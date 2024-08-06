@@ -1,0 +1,18 @@
+[
+    {
+      "name": "I met a great counsellor",
+      "message": "My counsellor was a lady by the name Tintswalo. She was excellent, she helped me make an appointment with a GP and then I was referred to a specialized Dr at a nearby hospital.",
+      "image": "path/to/image1.jpg"
+    },
+    {
+      "name": "Grateful for the service",
+      "message": "The telemedicine service was outstanding. It saved me a lot of travel time and expenses.",
+      "image": "path/to/image2.jpg"
+    },
+    {
+      "name": "Quick and easy consultation",
+      "message": "The virtual consultation was quick and easy. I received the necessary prescription within minutes.",
+      "image": "path/to/image3.jpg"
+    }
+  ]
+  

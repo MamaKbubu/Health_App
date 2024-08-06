@@ -1,6 +1,7 @@
 // frontend/src/pages/About.js
 import React, { useState, useEffect } from "react";
 import Navbar from "../components/Navbar";
+import Footer from "../components/Footer";
 import AboutDrs from "../components/AboutDrs";
 import NewProfessionalForm from "../components/NewProfessionalForm/NewProfessionalForm";
 import ProfessionalList from "../components/ProfessionalList/ProfessionalList";
@@ -36,6 +37,7 @@ const About = () => {
       <AboutDrs />
       <NewProfessionalForm fetchProfessionals={fetchProfessionals} />
       <ProfessionalList professionals={professionals} />
+      <Footer />
     </>
   );
 };
