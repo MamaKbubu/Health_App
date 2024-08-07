@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { FaBars } from "react-icons/fa";
 import { IconContext } from "react-icons/lib";
-// import {animateScroll as scroll} from "react-scroll"
+import { Link as LinkR } from "react-router-dom";
 import {
   Nav,
   NavbarContainer,
@@ -73,6 +73,19 @@ const Navbar = ({ toggle }) => {
                   offset={-80}
                 >
                   Services
+                </NavLinks>
+              </NavItem>
+              <NavItem>
+                <NavLinks
+                  as={LinkR}
+                  to="/Appointment"
+                  smooth={true}
+                  duration={500}
+                  spy={true}
+                  exact="true"
+                  offset={-80}
+                >
+                  Appointment-Setter
                 </NavLinks>
               </NavItem>
             </NavMenu>

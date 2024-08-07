@@ -5,11 +5,13 @@ const bodyParser = require("body-parser");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const dotenv = require("dotenv");
+const path = require("path");
+const { google } = require("googleapis"); // Added for Google Calendar API
+const fs = require("fs"); // Added for file system operations
 
 dotenv.config();
 
 const app = express();
-// Remove the duplicate declaration of 'PORT'
 
 // Middleware
 app.use(cors());
@@ -124,6 +126,102 @@ const protect = async (req, res, next) => {
   }
 };
 
+// Google Calendar API Setup
+const CREDENTIALS_PATH = path.join(__dirname, "credentials.json"); // Path to your Google OAuth credentials
+const TOKEN_PATH = "token.json"; // Path to store OAuth2 tokens
+
+// Load client secrets from a local file
+let credentials;
+try {
+  credentials = JSON.parse(fs.readFileSync(CREDENTIALS_PATH));
+} catch (error) {
+  console.error("Error reading credentials file:", error);
+  process.exit(1);
+}
+const { client_secret, client_id, redirect_uris } = credentials.web || {};
+
+if (!client_secret || !client_id || !redirect_uris) {
+  console.error("Error: Credentials missing required fields.");
+  process.exit(1);
+}
+
+const oAuth2Client = new google.auth.OAuth2(
+  client_id,
+  client_secret,
+  redirect_uris[0]
+);
+
+// const credentials = JSON.parse(fs.readFileSync(CREDENTIALS_PATH));
+// const { client_secret, client_id, redirect_uris } = credentials.installed;
+// const oAuth2Client = new google.auth.OAuth2(
+//   client_id,
+//   client_secret,
+//   redirect_uris[0]
+// );
+
+// Generate an authentication URL
+app.get("/auth", (req, res) => {
+  const authUrl = oAuth2Client.generateAuthUrl({
+    access_type: "offline",
+    scope: ["https://www.googleapis.com/auth/calendar.events"],
+  });
+  res.redirect(authUrl);
+});
+
+// Handle the OAuth2 callback
+app.get("/oauth2callback", async (req, res) => {
+  const code = req.query.code;
+  const { tokens } = await oAuth2Client.getToken(code);
+  oAuth2Client.setCredentials(tokens);
+
+  // Save the tokens for future use
+  fs.writeFileSync(TOKEN_PATH, JSON.stringify(tokens));
+  res.send("Authentication successful! You can close this window.");
+});
+
+// Route to create a new event
+app.post("/create-event", protect, async (req, res) => {
+  const { startTime, endTime, summary, description } = req.body;
+
+  // Load tokens
+  const tokens = JSON.parse(fs.readFileSync(TOKEN_PATH));
+  oAuth2Client.setCredentials(tokens);
+
+  const calendar = google.calendar({ version: "v3", auth: oAuth2Client });
+  const event = {
+    summary: summary || "Virtual Appointment",
+    description: description || "A virtual appointment via Google Meet",
+    start: {
+      dateTime: startTime,
+      timeZone: "America/Los_Angeles",
+    },
+    end: {
+      dateTime: endTime,
+      timeZone: "America/Los_Angeles",
+    },
+    conferenceData: {
+      createRequest: {
+        requestId: "sample123",
+        conferenceSolutionKey: {
+          type: "hangoutsMeet",
+        },
+      },
+    },
+  };
+
+  try {
+    const response = await calendar.events.insert({
+      calendarId: "primary",
+      resource: event,
+      conferenceDataVersion: 1,
+    });
+    res.json(response.data);
+  } catch (error) {
+    console.error("Error creating event:", error);
+    res.status(500).send("Error creating event");
+  }
+});
+
 // Professionals Routes
 app.get("/professionals/:type", protect, async (req, res) => {
   try {
@@ -159,5 +257,5 @@ app.get("/", (req, res) => {
 // Start Server
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
-  console.log(`Server is running on port ${5000}`);
+  console.log(`Server is running on port ${PORT}`);
 });
