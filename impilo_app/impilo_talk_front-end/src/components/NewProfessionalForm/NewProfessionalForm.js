@@ -24,7 +24,7 @@ const NewProfessionalForm = ({ fetchProfessionals }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.post("http://localhost:5000/professionals", formData);
+      await axios.post("http://localhost:5000/", formData);
       fetchProfessionals(); // Refresh the professional list
       setFormData({
         name: "",

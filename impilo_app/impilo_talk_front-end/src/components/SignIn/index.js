@@ -1,9 +1,5 @@
 import React, { useState } from "react";
-import { auth } from "../../firebase";
-import {
-  createUserWithEmailAndPassword,
-  signInWithEmailAndPassword,
-} from "firebase/auth";
+import axios from "axios";
 import {
   Container,
   FormWrap,
@@ -16,24 +12,38 @@ import {
   FormButton,
   Text,
 } from "./SigninElements";
+import { useNavigate } from "react-router-dom";
 
 const SignIn = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isSigningUp, setIsSigningUp] = useState(false);
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       if (isSigningUp) {
-        await createUserWithEmailAndPassword(auth, email, password);
-        console.log("Account created");
+        const response = await axios.post("http://localhost:5000/register", {
+          email,
+          password,
+        });
+        console.log("Account created:", response.data);
+        navigate("/"); // Redirect to the home page
       } else {
-        await signInWithEmailAndPassword(auth, email, password);
-        console.log("You are in");
+        const response = await axios.post("http://localhost:5000/login", {
+          email,
+          password,
+        });
+        console.log("You are in:", response.data);
+        localStorage.setItem("token", response.data.token);
+        navigate("/"); // Redirect to the homepage
       }
     } catch (error) {
-      console.error("Error:", error.message);
+      console.error(
+        "Error:",
+        error.response ? error.response.data : error.message
+      );
     }
   };
 
