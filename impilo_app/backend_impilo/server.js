@@ -11,7 +11,7 @@ const fs = require("fs"); // Added for file system operations
 
 dotenv.config();
 
-const app = express();
+const app = express(); // ensures definition
 
 // Middleware
 app.use(cors());
@@ -177,6 +177,17 @@ app.get("/oauth2callback", async (req, res) => {
   // Save the tokens for future use
   fs.writeFileSync(TOKEN_PATH, JSON.stringify(tokens));
   res.send("Authentication successful! You can close this window.");
+});
+
+// Example POST route for appointments
+app.post("/appointments", protect, async (req, res) => {
+  const { time, date, name, appointmentWith, additionalInfo } = req.body;
+  try {
+    // Code to handle appointment creation
+    res.status(201).json({ message: "Appointment created successfully" });
+  } catch (error) {
+    res.status(500).json({ message: "Failed to create appointment" });
+  }
 });
 
 // Route to create a new event

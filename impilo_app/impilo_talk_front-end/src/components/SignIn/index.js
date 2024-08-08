@@ -20,18 +20,20 @@ const SignIn = () => {
   const [isSigningUp, setIsSigningUp] = useState(false);
   const navigate = useNavigate();
 
+  const apiUrl = process.env.REACT_APP_API_URL;
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       if (isSigningUp) {
-        const response = await axios.post("http://localhost:5000/register", {
+        const response = await axios.post(`${apiUrl}/register`, {
           email,
           password,
         });
         console.log("Account created:", response.data);
         navigate("/"); // Redirect to the home page
       } else {
-        const response = await axios.post("http://localhost:5000/login", {
+        const response = await axios.post(`${apiUrl}/login`, {
           email,
           password,
         });
